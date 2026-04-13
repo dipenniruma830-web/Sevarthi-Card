@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sevarthi Card – Data Entry</title>
+  <style>
+    /* ── Base ── */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0a0a0a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid #2e2e2e;
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin: 0 0 16px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+      color: #ccc;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0 2px;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      background: #2c2c2c;
+      color: #fff;
+      font-size: 15px;
+      transition: border .2s;
+    }
+
+    input::placeholder {
+      color: #777;
+    }
+
+    select option {
+      background: #2c2c2c;
+      color: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #007bff;
+      background: #333;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      transition: background .3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .back-btn {
+      background: #6c757d;
+      margin-top: 8px;
+    }
+
+    .back-btn:hover {
+      background: #5a6268;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #ddd;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #007bff;
+      width: 0%;
+      transition: width .4s ease;
+    }
+
+    .error-text {
+      color: red;
+      font-size: 13px;
+      margin: 0 0 4px;
+    }
+
+    .user-info-bar {
+      background: #1e3a2e;
+      border: 1px solid #2e6b4a;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #66bb6a;
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .login-hint {
+      text-align: center;
+      margin-top: 14px;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .login-hint b {
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- ==================== LOGIN PAGE ==================== -->
+    <div id="loginSection">
+      <h2>🔐 Sevarthi Card Login</h2>
+
+      <label>Login ID:</label>
+      <input type="text" id="loginId" placeholder="Enter your Login ID">
+      <span class="error-text hidden" id="loginIdErr">Login ID is required.</span>
+
+      <label>Password:</label>
+      <input type="password" id="loginPassword" placeholder="Enter your Password">
+      <span class="error-text hidden" id="loginPassErr">Password is required.</span>
+
+      <span class="error-text hidden" id="loginWrongErr">❌ Invalid Login ID or Password.</span>
+
+      <button onclick="doLogin()">Login →</button>
+
+      <p class="login-hint">
+        Demo: ID = <b>admin</b> | Password = <b>sevarthi123</b>
+      </p>
+    </div>
+
+    <!-- ==================== MULTI‑STEP FORM ==================== -->
+    <div id="formSection" class="hidden">
+
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+      <!-- ── STEP 1 ── -->
+      <div id="step1" class="hidden">
+        <div class="user-info-bar" id="userInfoBar1"></div>
+        <h2>Step 1 of 2 – Card Received</h2>
+
+        <label>PID (Card Number):</label>
+        <input type="text" id="pid" placeholder="e.g. SEV-001">
+        <span class="error-text hidden" id="pidErr">PID is required.</span>
+
+        <label>Seva ID:</label>
+        <input type="text" id="sevaId" placeholder="Enter Seva ID">
+        <span class="error-text hidden" id="sevaIdErr">Seva ID is required.</span>
+
+        <label>Card Received? (Yes / No):</label>
+        <select id="cardReceived">
+          <option value="" disabled selected>-- Select --</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <span class="error-text hidden" id="cardReceivedErr">Please select Yes or No.</span>
+
+        <button onclick="goToStep2()">Next Step →</button>
+      </div>
+
+      <!-- ── STEP 2 ── -->
+      <div id="step2" class="hidden">
+        <div class="user-info-bar" id="userInfoBar2"></div>
+        <h2>Step 2 of 2 – Department Details</h2>
+
+        <label>Department Name:</label>
+        <input type="text" id="deptName" list="deptList" placeholder="Search or select department...">
+        <datalist id="deptList">
+          <!-- Fallback options (taken from your screenshot) -->
+          <option value="Accounts"></option>
+          <option value="Amba Food"></option>
+          <option value="Amba Health"></option>
+          <option value="Akonnect"></option>
+          <option value="Advertise & Publicity"></option>
+          <option value="Amba Refreshment"></option>
+          <option value="Apt Sankul"></option>
+          <option value="AkramVignan Workshop"></option>
+          <option value="Bhojanshala"></option>
+          <option value="Bhojan Pass"></option>
+          <option value="Book Stall"></option>
+          <option value="Cultural Activity"></option>
+          <option value="Chappal Bags"></option>
+          <option value="Cleaning"></option>
+          <option value="Children Park"></option>
+          <option value="Carpentry"></option>
+          <option value="Construction"></option>
+          <option value="Dada Bhagwan Foundation"></option>
+          <option value="Decoration"></option>
+          <option value="Dadanagar E Rickshaw"></option>
+          <option value="Dormitory"></option>
+          <option value="AptaSinchan"></option>
+          <option value="dormetri"></option>
+        </datalist>
+        <span class="error-text hidden" id="deptNameErr">Department name is required.</span>
+
+        <label>HR Person Name (who gave card):</label>
+        <input type="text" id="hrName" placeholder="Enter HR Person Name">
+        <span class="error-text hidden" id="hrNameErr">HR Person name is required.</span>
+
+        <button onclick="submitFinalData()">📊 Submit to Google Sheet</button>
+        <button class="back-btn" onclick="goBackToStep1()">← Back</button>
+
+        <div id="statusMsg" class="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─────────────────────────────────────────────────────────────
+    //  CONFIGURATION – change these values
+    // ─────────────────────────────────────────────────────────────
+
+    // Paste your Google Apps Script Web App URL here:
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzltnmOMGnD2x3D7DME33PbgFDY4oqJSHyv5NzBFWe4ZCEXmkPAVCOTdkOiEZZsqsKW/exec";
+
+    // Security token (must match the token in google-apps-script.gs)
+    const SECRET_TOKEN = "MY_SECURE_PASSWORD_123";
+
+    // Users: { "loginId": "password" }
+    const USERS = {
+      "DipenP": "Dadashri",
+      "dipen": "Dipen21",
+      "Jigar": "Jigar20"
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    let currentUser = "";
+
+    // ── FETCH DEPARTMENTS FROM SHEET 2 (optional dynamic list) ──
+    // If your Apps Script implements a `doGet(e)` that returns JSON
+    // when `e.parameter.action === 'getDepartments'`, this will replace
+    // the static fallback options above.
+    window.onload = function () { fetchDepartments(); };
+
+    function fetchDepartments() {
+      fetch(GOOGLE_SHEET_URL + "?action=getDepartments")
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.departments) {
+            const dl = document.getElementById('deptList');
+            dl.innerHTML = "";
+            data.departments.forEach(d => {
+              const opt = document.createElement('option');
+              opt.value = d;
+              dl.appendChild(opt);
+            });
+          }
+        })
+        .catch(() => console.log("Dynamic department fetch not configured – using static list."));
+    }
+
+    // ── LOGIN ───────────────────────────────────────────────────
+    function doLogin() {
+      const id = document.getElementById('loginId').value.trim();
+      const pw = document.getElementById('loginPassword').value.trim();
+      let valid = true;
+
+      ['loginIdErr', 'loginPassErr', 'loginWrongErr'].forEach(e => document.getElementById(e).classList.add('hidden'));
+
+      if (!id) { document.getElementById('loginIdErr').classList.remove('hidden'); valid = false; }
+      if (!pw) { document.getElementById('loginPassErr').classList.remove('hidden'); valid = false; }
+      if (!valid) return;
+
+      if (USERS[id] && USERS[id] === pw) {
+        currentUser = id;
+        const bar = `👤 Logged in as: <b>${id}</b>`;
+        document.getElementById('userInfoBar1').innerHTML = bar;
+        document.getElementById('userInfoBar2').innerHTML = bar;
+
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('formSection').classList.remove('hidden');
+        showStep(1);
+      } else {
+        document.getElementById('loginWrongErr').classList.remove('hidden');
+      }
+    }
+
+    // Allow pressing Enter on login page
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !document.getElementById('loginSection').classList.contains('hidden')) {
+        doLogin();
+      }
+    });
+
+    // ── STEP NAVIGATION ────────────────────────────────────────
+    function showStep(step) {
+      const fill = document.getElementById('progressFill');
+      if (step === 1) {
+        document.getElementById('step1').classList.remove('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        fill.style.width = '50%';
+      } else {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+        fill.style.width = '100%';
+      }
+    }
+
+    function goToStep2() {
+      const pid = document.getElementById('pid').value.trim();
+      const sevaId = document.getElementById('sevaId').value.trim();
+      const cardReceived = document.getElementById('cardReceived').value;
+      let valid = true;
+
+      ['pidErr', 'sevaIdErr', 'cardReceivedErr'].forEach(e => document.getElementById(e).classList.add('hidden'));
+
+      if (!pid) { document.getElementById('pidErr').classList.remove('hidden'); valid = false; }
+      if (!sevaId) { document.getElementById('sevaIdErr').classList.remove('hidden'); valid = false; }
+      if (!cardReceived) { document.getElementById('cardReceivedErr').classList.remove('hidden'); valid = false; }
+
+      if (valid) showStep(2);
+    }
+
+    function goBackToStep1() {
+      document.getElementById('statusMsg').innerText = "";
+      showStep(1);
+    }
+
+    // ── SUBMIT TO GOOGLE SHEET ─────────────────────────────────
+    function submitFinalData() {
+      const deptName = document.getElementById('deptName').value.trim();
+      const hrName = document.getElementById('hrName').value.trim();
+      let valid = true;
+
+      ['deptNameErr', 'hrNameErr'].forEach(e => document.getElementById(e).classList.add('hidden'));
+
+      if (!deptName) { document.getElementById('deptNameErr').classList.remove('hidden'); valid = false; }
+      if (!hrName) { document.getElementById('hrNameErr').classList.remove('hidden'); valid = false; }
+      if (!valid) return;
+
+      const msg = document.getElementById('statusMsg');
+      msg.innerText = "⏳ Securing & Sending...";
+      msg.style.color = "blue";
+
+      const payload = {
+        token: SECRET_TOKEN,
+        loginId: currentUser,
+        pid: document.getElementById('pid').value.trim(),
+        sevaId: document.getElementById('sevaId').value.trim(),
+        cardReceived: document.getElementById('cardReceived').value,
+        deptName: deptName,
+        hrName: hrName,
+        submittedAt: new Date().toLocaleString()
+      };
+
+      fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(() => {
+          msg.innerText = "✅ Data successfully saved to Google Sheet!";
+          msg.style.color = "green";
+
+          // Reset form after a short pause
+          setTimeout(() => {
+            ['pid', 'sevaId', 'deptName', 'hrName'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('cardReceived').value = '';
+            msg.innerText = "";
+            goBackToStep1();
+          }, 2500);
+        })
+        .catch(() => {
+          msg.innerText = "❌ Connection Error! Check Sheet URL.";
+          msg.style.color = "red";
+        });
+    }
+  </script>
+</body>
+
+</html>
